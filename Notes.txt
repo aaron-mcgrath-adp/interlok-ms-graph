@@ -1,0 +1,14 @@
+Register App: https://apps.dev.microsoft.com/
+
+Add an App
+
+Choose Service and Daemon App (not Single page, Mobile/Desktop, Server Side web app or Web API).
+
+My Password: dkaeSHY163^:kloCAVR54@%
+
+App ID: b9499a9f-3383-46f2-a891-db66a40b870a
+
+Name: Interlok3.8.1
+
+Auth response url: http://localhost:8883
+
