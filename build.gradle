@@ -69,10 +69,12 @@ dependencies {
   compile ("com.adaptris:interlok-core:$interlokCoreVersion") { changing= true}
   compile ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
   
+  compile ("com.adaptris:interlok-oauth-azure:$interlokCoreVersion") { changing= true}
+  
   compile ("org.slf4j:slf4j-api:$slf4jVersion")
 
   // Switch to using this MS artefact when the bintray repo starts working.
-  // compile('com.microsoft.graph:microsoft-graph:0.3.0')  
+  // compile('com.microsoft.graph:microsoft-graph:1.0.0')  
   
   compile('com.microsoft:ms-graph:0.3.0')
   compile('com.google.code.gson:gson:2.8.2')
