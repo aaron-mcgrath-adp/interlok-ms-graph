@@ -12,7 +12,6 @@ import com.adaptris.core.http.client.RequestMethodProvider.RequestMethod;
 import com.adaptris.core.http.client.net.StandardHttpProducer;
 import com.adaptris.core.util.LifecycleHelper;
 import com.adaptris.security.password.Password;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -53,22 +52,17 @@ public class MSGraphStandardHttpAutheticator implements MSGraphAuthenticator {
     long validFrom = System.currentTimeMillis();
     
     JsonParser parser = new JsonParser();
-    JsonArray jsonArray = (JsonArray) parser.parse(jsonResponse);
+    JsonObject expiry = (JsonObject) parser.parse(jsonResponse);
+
+    int expiryInt = (int) expiry.get("expires_in").getAsInt();
+    String accessToken = (String) expiry.get("access_token").getAsString();
+
+    MSGraphAccessToken returnedToken = new MSGraphAccessToken();
+    returnedToken.setAccessToken(accessToken);
+    returnedToken.setExpiresInSeconds(expiryInt);
+    returnedToken.setValidFromMillisEpoc(validFrom);
     
-    if(jsonArray.size() == 1) {
-      JsonObject expiry = (JsonObject) jsonArray.get(0);
-
-      int expiryInt = (int) expiry.get("expires_in").getAsInt();
-      String accessToken = (String) expiry.get("access_token").getAsString();
-
-      MSGraphAccessToken returnedToken = new MSGraphAccessToken();
-      returnedToken.setAccessToken(accessToken);
-      returnedToken.setExpiresInSeconds(expiryInt);
-      returnedToken.setValidFromMillisEpoc(validFrom);
-      
-      return returnedToken;
-    } else
-      throw new CoreException("Expected single json response element, but got " + jsonArray.size());
+    return returnedToken;
   }
 
   private String fireHttpAutheticationRequest() throws CoreException {
@@ -84,7 +78,7 @@ public class MSGraphStandardHttpAutheticator implements MSGraphAuthenticator {
       httpRequestPayload.append("&scope=");
       httpRequestPayload.append(URLEncoder.encode(this.scope(), "UTF-8"));
       httpRequestPayload.append("&client_secret=");
-      httpRequestPayload.append(Password.decode(this.getSecret()));
+      httpRequestPayload.append(URLEncoder.encode(Password.decode(this.getSecret()), "UTF-8"));
       httpRequestPayload.append("&grant_type=");
       httpRequestPayload.append(this.grantType());
     } catch (Exception ex) {

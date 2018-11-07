@@ -4,8 +4,10 @@ import java.util.Arrays;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.adaptris.annotation.AdapterComponent;
 import com.adaptris.annotation.AffectsMetadata;
 import com.adaptris.annotation.AutoPopulated;
+import com.adaptris.annotation.ComponentProfile;
 import com.adaptris.annotation.InputFieldDefault;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.ConfiguredProduceDestination;
@@ -24,6 +26,8 @@ import com.adaptris.util.KeyValuePairSet;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XStreamAlias("ms-graph-raw-request-service")
+@AdapterComponent
+@ComponentProfile(summary = "Service that uses http to send REST style requests.", tag = "service,http,rest")
 public class MSGraphRawRequestService extends ServiceImp {
   
   private static final long DEFAULT_TIMEOUT = 5000l;

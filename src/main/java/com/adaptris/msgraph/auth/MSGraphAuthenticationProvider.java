@@ -4,11 +4,12 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.adaptris.annotation.AdapterComponent;
 import com.adaptris.annotation.AffectsMetadata;
+import com.adaptris.annotation.ComponentProfile;
 import com.adaptris.annotation.InputFieldDefault;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
-import com.microsoft.graph.authentication.IAuthenticationProvider;
 import com.microsoft.graph.core.ClientException;
 import com.microsoft.graph.http.IHttpRequest;
 import com.microsoft.graph.options.HeaderOption;
@@ -16,7 +17,9 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 
 @XStreamAlias("ms-graph-authentication-provider")
-public class MSGraphAuthenticationProvider implements IAuthenticationProvider {
+@AdapterComponent
+@ComponentProfile(summary = "Authenticator for the MS Graph API.", tag = "authenticator")
+public class MSGraphAuthenticationProvider implements AuthenticationProvider {
   
   protected transient Logger log = LoggerFactory.getLogger(this.getClass().getName());
   /**
@@ -31,7 +34,7 @@ public class MSGraphAuthenticationProvider implements IAuthenticationProvider {
   @InputFieldDefault(value = "Authorization")
   private String tokenKey;
   
-  private AdaptrisMessage message;
+  private transient AdaptrisMessage message;
   
   public MSGraphAuthenticationProvider() {
   }
@@ -67,21 +70,21 @@ public class MSGraphAuthenticationProvider implements IAuthenticationProvider {
    * @throws CoreException
    */
   private String getAccessToken() throws CoreException {
-    if(this.getMessage() == null)
+    if(this.getAdaptrisMessage() == null)
       throw new CoreException("No AdaptrisMessage found to retrieve the acce4ss token key.");
     
-    String accessToken = this.getMessage().getMetadataValue(this.tokenKey());
+    String accessToken = this.getAdaptrisMessage().getMetadataValue(this.tokenKey());
     if(accessToken == null)
       throw new CoreException("No access token found in AdaptrisMessage.");
     
     return accessToken;
   }
 
-  public AdaptrisMessage getMessage() {
+  public AdaptrisMessage getAdaptrisMessage() {
     return message;
   }
 
-  public void setMessage(AdaptrisMessage message) {
+  public void setAdaptrisMessage(AdaptrisMessage message) {
     this.message = message;
   }
   
