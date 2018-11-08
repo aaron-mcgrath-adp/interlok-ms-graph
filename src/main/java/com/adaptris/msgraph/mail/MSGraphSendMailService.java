@@ -1,5 +1,7 @@
 package com.adaptris.msgraph.mail;
 
+import com.adaptris.annotation.AdapterComponent;
+import com.adaptris.annotation.ComponentProfile;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.ServiceException;
@@ -7,6 +9,8 @@ import com.adaptris.msgraph.MSGraphBaseService;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XStreamAlias("ms-graph-send-mail-service")
+@AdapterComponent
+@ComponentProfile(summary = "Calls the MS Graph mail api to send a email message with the given details.", tag = "ms-graph,service")
 public class MSGraphSendMailService extends MSGraphBaseService {
   
   private MailDefinitionProvider mailDefinitionProvider;
